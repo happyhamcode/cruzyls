@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahoy! First Cruise Prep — Royal Caribbean Pirate Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#4A2E18;
+    --navy-deep:#2C1810;
+    --cream:#F6ECD1;
+    --brass:#D9A441;
+    --brass-soft:#F0CE85;
+    --teal:#1F7A72;
+    --coral:#C13B2A;
+    --rope:#8A6339;
+    --line:rgba(74,46,24,0.16);
+    --ink:#3B2A1A;
+    --ink-soft:rgba(59,42,26,0.66);
+    --white:#FFFDF6;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Nunito', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+
+  /* ---------- background texture (parchment + compass) ---------- */
+  .waves{
+    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.6;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(217,164,65,0.10) 0, transparent 40%),
+      radial-gradient(circle at 85% 75%, rgba(31,122,114,0.10) 0, transparent 45%),
+      radial-gradient(circle at 60% 10%, rgba(59,42,26,0.035) 0, transparent 30%),
+      radial-gradient(circle at 25% 85%, rgba(59,42,26,0.03) 0, transparent 28%);
+  }
+  .paper-grain{
+    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.045; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .compass-corner{
+    position:fixed; z-index:0; pointer-events:none; opacity:0.07;
+  }
+  .compass-corner.br{bottom:-40px; right:-40px;}
+  .compass-corner.tl{top:-30px; left:-30px; transform:rotate(18deg);}
+
+  /* ---------- header (ship's sign) ---------- */
+  header{
+    position:relative; z-index:1;
+    background:linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    color:var(--cream);
+    padding:38px 20px 30px;
+    border-bottom:4px solid var(--brass);
+  }
+  .header-inner{max-width:880px; margin:0 auto; position:relative;}
+  .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-size:12px; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--brass-soft); font-weight:700; margin-bottom:14px;
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--brass);}
+  h1{
+    font-family:'Luckiest Guy', cursive;
+    font-weight:400;
+    font-size:clamp(32px, 7vw, 50px);
+    line-height:1.12;
+    margin:0 0 14px;
+    letter-spacing:0.5px;
+  }
+  h1 em{font-style:normal; color:var(--brass-soft);}
+  .sub{
+    font-size:16px; color:rgba(246,241,230,0.82); max-width:56ch; line-height:1.55; margin:0 0 22px;
+  }
+  .verify-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(217,164,65,0.16);
+    border:1px solid rgba(217,164,65,0.45);
+    color:var(--brass-soft);
+    padding:8px 14px; border-radius:999px;
+    font-size:12.5px; font-weight:700;
+  }
+  .verify-badge svg{flex-shrink:0;}
+
+  .captain-badge{
+    position:absolute; top:-6px; right:0;
+    width:64px; height:64px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--brass-soft), var(--brass) 75%);
+    border:3px solid var(--cream);
+    box-shadow:0 4px 10px rgba(0,0,0,0.35);
+    display:flex; align-items:center; justify-content:center;
+    font-size:28px;
+    animation:badge-wiggle 4.5s ease-in-out infinite;
+  }
+  @keyframes badge-wiggle{
+    0%,100%{transform:rotate(-8deg);}
+    50%{transform:rotate(-1deg);}
+  }
+  @media (max-width:560px){.captain-badge{display:none;}}
+
+  /* ---------- bunting (pirate flag strip) ---------- */
+  .bunting{
+    position:relative; z-index:1;
+    height:28px;
+    border-top:3px dashed var(--brass);
+    background-color:var(--cream);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='28'%3E%3Cpolygon points='2,0 38,0 20,24' fill='%23D9A441'/%3E%3Cpolygon points='42,0 78,0 60,24' fill='%23C13B2A'/%3E%3C/svg%3E");
+    background-repeat:repeat-x;
+    background-position:top center;
+    background-size:80px 28px;
+  }
+
+  /* ---------- progress strip ---------- */
+  .progress-wrap{
+    position:relative; z-index:1;
+    max-width:880px; margin:-22px auto 0; padding:0 20px;
+  }
+  .progress-card{
+    background:var(--white);
+    border-radius:14px;
+    box-shadow:0 10px 30px rgba(74,46,24,0.18);
+    padding:18px 22px;
+    display:flex; align-items:center; gap:18px;
+    border:1px solid var(--line);
+  }
+  .compass-dial{display:flex; flex-direction:column; align-items:center; gap:4px; width:64px; flex-shrink:0;}
+  .compass-dial svg{width:64px; height:64px; overflow:visible;}
+  .compass-face{fill:var(--cream); stroke:var(--navy); stroke-width:2;}
+  .compass-tick{stroke:var(--navy); stroke-width:1; opacity:0.5;}
+  .compass-tick.cardinal{stroke-width:1.6; opacity:0.85;}
+  .compass-label{font-family:'Baloo 2', cursive; font-size:8px; font-weight:700; fill:var(--navy); text-anchor:middle;}
+  .compass-mark{font-size:9px; text-anchor:middle;}
+  #compassNeedle{transform-origin:50px 50px; transition:transform 0.5s cubic-bezier(.34,1.4,.64,1);}
+  .needle-front{fill:var(--coral);}
+  .needle-back{fill:var(--brass-soft);}
+  .compass-pivot{fill:var(--navy); stroke:var(--brass); stroke-width:1.5;}
+  .compass-pct{
+    font-weight:800; font-size:12px; color:var(--navy);
+    background:var(--brass-soft); padding:1px 9px; border-radius:999px;
+    white-space:nowrap;
+  }
+  .progress-text strong{font-family:'Baloo 2', cursive; font-size:18px; font-weight:700; display:block;}
+  .progress-text span{font-size:13.5px; color:var(--ink-soft);}
+
+  /* ---------- nav tabs ---------- */
+  nav{
+    position:sticky; top:0; z-index:5;
+    background:var(--cream);
+    padding:22px 20px 10px;
+    border-bottom:1px solid var(--line);
+  }
+  .tabs{
+    max-width:880px; margin:0 auto;
+    display:flex; gap:6px; overflow-x:auto;
+    padding-bottom:12px;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{
+    flex-shrink:0;
+    font-family:'Baloo 2', cursive;
+    font-weight:700; font-size:13.5px;
+    padding:10px 16px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--white);
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:all 0.18s ease;
+    white-space:nowrap;
+  }
+  .tab-btn:hover{border-color:var(--brass); color:var(--navy); transform:translateY(-2px);}
+  .tab-btn:focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+  .tab-btn.active{
+    background:var(--navy); color:var(--cream); border-color:var(--navy);
+  }
+  .tab-count{
+    display:inline-block; margin-left:6px; font-size:11px; opacity:0.75;
+  }
+
+  /* ---------- main ---------- */
+  main{
+    position:relative; z-index:1;
+    max-width:880px; margin:0 auto; padding:28px 20px 80px;
+  }
+  .panel{display:none; animation:fade 0.35s ease;}
+  .panel.active{display:block;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .panel-head{margin-bottom:22px;}
+  .panel-head h2{
+    font-family:'Baloo 2', cursive; font-weight:800; font-size:27px; margin:0 0 6px; color:var(--navy);
+  }
+  .panel-head p{color:var(--ink-soft); font-size:14.5px; line-height:1.6; margin:0; max-width:62ch;}
+
+  /* ---------- checklist groups ---------- */
+  .group{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:16px;
+    margin-bottom:16px;
+    overflow:hidden;
+  }
+  .group-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 20px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .group-head-left{display:flex; align-items:center; gap:12px;}
+  .group-icon{
+    font-size:17px; width:34px; height:34px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    background:radial-gradient(circle at 35% 30%, var(--brass-soft), var(--brass) 75%);
+    border:2px solid var(--navy);
+  }
+  .group-title{font-family:'Baloo 2', cursive; font-weight:700; font-size:16.5px; color:var(--navy);}
+  .group-meta{font-size:12.5px; color:var(--ink-soft); font-weight:700;}
+  .group-chevron{
+    width:20px; height:20px; color:var(--ink-soft); transition:transform 0.2s ease; flex-shrink:0;
+  }
+  .group.open .group-chevron{transform:rotate(180deg);}
+  .group-body{
+    max-height:0; overflow:hidden; transition:max-height 0.3s ease;
+  }
+  .group.open .group-body{max-height:2000px;}
+  .group-items{padding:0 20px 16px;}
+
+  .item{
+    display:flex; align-items:flex-start; gap:12px;
+    padding:10px 0;
+    border-top:1px solid var(--line);
+  }
+  .item:first-child{border-top:none;}
+  .item input[type=checkbox]{
+    appearance:none; -webkit-appearance:none;
+    width:22px; height:22px; flex-shrink:0; margin-top:1px;
+    border:2px solid #C9A66B;
+    border-radius:50%;
+    cursor:pointer;
+    position:relative;
+    background:var(--white);
+    transition:all 0.15s ease;
+  }
+  .item input[type=checkbox]:checked{
+    background:var(--teal); border-color:var(--teal);
+  }
+  .item input[type=checkbox]:checked::after{
+    content:''; position:absolute; left:7px; top:3px;
+    width:5px; height:10px;
+    border:solid white; border-width:0 2px 2px 0;
+    transform:rotate(45deg);
+  }
+  .item input[type=checkbox]:focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+  .item label{
+    font-size:14.5px; line-height:1.5; cursor:pointer; flex:1;
+  }
+  .item.checked label{color:var(--ink-soft); text-decoration:line-through; text-decoration-color:#C9A66B;}
+  .item-note{
+    display:block; font-size:12.5px; color:var(--teal); margin-top:2px; font-weight:700;
+  }
+
+  /* ---------- info / rule cards ---------- */
+  .rule-card{
+    background:var(--white); border:1px solid var(--line); border-radius:16px;
+    padding:18px 20px; margin-bottom:14px;
+  }
+  .rule-card h3{
+    font-family:'Baloo 2', cursive; font-size:16.5px; font-weight:700; margin:0 0 8px; color:var(--navy);
+    display:flex; align-items:center; gap:8px;
+  }
+  .rule-card p{font-size:14px; line-height:1.6; color:var(--ink); margin:0 0 8px;}
+  .rule-card p:last-child{margin-bottom:0;}
+  .rule-card ul{margin:8px 0 0; padding-left:20px;}
+  .rule-card li{font-size:14px; line-height:1.6; margin-bottom:4px;}
+
+  .tag{
+    display:inline-block; font-size:11px; font-weight:800; letter-spacing:0.04em;
+    text-transform:uppercase; padding:4px 9px; border-radius:6px; margin-bottom:2px;
+  }
+  .tag-allowed{background:rgba(31,122,114,0.14); color:var(--teal);}
+  .tag-banned{background:rgba(193,59,42,0.13); color:var(--coral);}
+  .tag-review{background:rgba(217,164,65,0.2); color:#8A6A1E;}
+
+  .banned-grid{display:grid; grid-template-columns:1fr; gap:12px;}
+  @media(min-width:620px){.banned-grid{grid-template-columns:1fr 1fr;}}
+  .banned-card{
+    border:1px solid var(--line); border-left:4px solid var(--coral);
+    background:var(--white); border-radius:12px; padding:14px 16px;
+  }
+  .banned-card.exception{border-left-color:var(--brass);}
+  .banned-card h4{font-size:14.5px; margin:0 0 6px; font-weight:700; color:var(--navy);}
+  .banned-card p{font-size:13px; color:var(--ink-soft); line-height:1.55; margin:0;}
+
+  /* timeline (rope + brass rivets) */
+  .timeline{position:relative; padding-left:28px; margin-top:10px;}
+  .timeline::before{
+    content:''; position:absolute; left:6px; top:6px; bottom:6px; width:5px;
+    border-radius:3px;
+    background-image:repeating-linear-gradient(135deg, var(--brass) 0 4px, var(--rope) 4px 8px);
+  }
+  .t-step{position:relative; padding-bottom:22px;}
+  .t-step:last-child{padding-bottom:0;}
+  .t-step::before{
+    content:''; position:absolute; left:-28px; top:2px;
+    width:16px; height:16px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--brass-soft), var(--brass) 75%);
+    border:3px solid var(--white);
+    box-shadow:0 0 0 2px var(--navy);
+  }
+  .t-step h4{font-size:14.5px; margin:0 0 4px; font-weight:700; font-family:'Baloo 2', cursive; color:var(--navy);}
+  .t-step p{font-size:13.5px; color:var(--ink-soft); margin:0; line-height:1.55;}
+
+  .callout{
+    background:linear-gradient(135deg, rgba(217,164,65,0.12), rgba(31,122,114,0.10));
+    border:1px solid rgba(217,164,65,0.4);
+    border-radius:14px; padding:16px 18px; margin:18px 0;
+    font-size:13.5px; line-height:1.6;
+  }
+  .callout strong{color:var(--navy);}
+
+  footer{
+    text-align:center; padding:26px 20px 40px; color:var(--ink-soft); font-size:12.5px;
+    position:relative; z-index:1;
+    border-top:3px dashed var(--brass);
+    max-width:880px; margin:0 auto;
+  }
+  footer a{color:var(--teal);}
+  footer .signoff{
+    display:block; margin-top:10px; font-family:'Baloo 2', cursive; font-weight:700;
+    font-size:14px; color:var(--navy);
+  }
+
+  .reset-btn{
+    background:none; border:1px solid var(--line); color:var(--ink-soft);
+    font-family:'Baloo 2', cursive;
+    font-size:12.5px; font-weight:700; padding:8px 14px; border-radius:999px;
+    cursor:pointer; margin-top:4px;
+  }
+  .reset-btn:hover{border-color:var(--coral); color:var(--coral);}
+
+  /* ---------- trip card ---------- */
+  .trip-wrap{position:relative; z-index:1; max-width:880px; margin:14px auto 0; padding:0 20px;}
+  .trip-card{
+    background:var(--white); border-radius:14px; border:1px solid var(--line);
+    box-shadow:0 10px 30px rgba(74,46,24,0.14); padding:20px 22px;
+  }
+  .trip-head{display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:8px 16px; margin-bottom:14px;}
+  .trip-head h3{font-family:'Baloo 2', cursive; font-size:19px; font-weight:700; margin:0; color:var(--navy);}
+  .trip-countdown{
+    background:rgba(217,164,65,0.16); border:1px solid rgba(217,164,65,0.4);
+    color:var(--navy); font-weight:700; font-size:12.5px; padding:6px 12px; border-radius:999px;
+  }
+  .trip-days{display:grid; grid-template-columns:repeat(auto-fit, minmax(112px,1fr)); gap:8px;}
+  .trip-day{
+    border:1px solid var(--line); border-radius:10px; padding:10px 10px 9px;
+    background:var(--cream); text-align:left;
+  }
+  .trip-day .d-label{font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-soft);}
+  .trip-day .d-date{font-size:12px; color:var(--ink-soft); margin-top:1px;}
+  .trip-day .d-place{font-size:14px; font-weight:700; color:var(--navy); margin-top:4px; line-height:1.25;}
+  .trip-day .d-time{font-size:11.5px; color:var(--teal); margin-top:2px; font-weight:600;}
+  .trip-day.at-sea{background:transparent; border-style:dashed;}
+  .trip-note{font-size:12.5px; color:var(--ink-soft); margin:12px 0 0; line-height:1.5;}
+</style>
+</head>
+<body>
+
+<div class="waves" aria-hidden="true"></div>
+<div class="paper-grain" aria-hidden="true"></div>
+<svg class="compass-corner br" aria-hidden="true" width="260" height="260" viewBox="0 0 260 260">
+  <circle cx="130" cy="130" r="118" fill="none" stroke="#4A2E18" stroke-width="2"/>
+  <circle cx="130" cy="130" r="88" fill="none" stroke="#4A2E18" stroke-width="1.5"/>
+  <polygon points="130,14 143,130 130,246 117,130" fill="#4A2E18"/>
+  <polygon points="14,130 130,117 246,130 130,143" fill="#4A2E18"/>
+  <polygon points="130,46 165,95 130,130 95,95" fill="#D9A441"/>
+  <polygon points="130,214 165,165 130,130 95,165" fill="#D9A441"/>
+  <circle cx="130" cy="130" r="7" fill="#4A2E18"/>
+</svg>
+<svg class="compass-corner tl" aria-hidden="true" width="160" height="160" viewBox="0 0 260 260">
+  <circle cx="130" cy="130" r="118" fill="none" stroke="#4A2E18" stroke-width="2"/>
+  <polygon points="130,14 143,130 130,246 117,130" fill="#4A2E18"/>
+  <polygon points="14,130 130,117 246,130 130,143" fill="#4A2E18"/>
+  <circle cx="130" cy="130" r="6" fill="#D9A441"/>
+</svg>
+
+<header>
+  <div class="header-inner">
+    <div class="captain-badge" aria-hidden="true">🏴‍☠️</div>
+    <div class="eyebrow"><span class="dot"></span>AHOY! FIRST-TIME SAILOR'S GUIDE · ROYAL CARIBBEAN</div>
+    <h1>Chart yer course.<br><em>Board without a hitch, matey.</em></h1>
+    <p class="sub">A checklist-driven guide built for your first sailing to Alaska with a stop in Victoria, BC — what to pack, what's banned, how the wine and drink rules work, and what happens on embarkation day.</p>
+    <span class="verify-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7l7-4z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Verified against current Royal Caribbean policy
+    </span>
+  </div>
+</header>
+
+<div class="bunting" aria-hidden="true"></div>
+
+<div class="trip-wrap">
+  <div class="trip-card">
+    <div class="trip-head">
+      <h3>⚓ Voyager of the Seas · 7-Night Alaska Voyage</h3>
+      <span class="trip-countdown">Departs Fri, Aug 14 · 4:00 PM · Seattle</span>
+    </div>
+    <div class="trip-days">
+      <div class="trip-day"><div class="d-label">Day 1</div><div class="d-date">Fri, Aug 14</div><div class="d-place">Seattle, WA</div><div class="d-time">Departs 4:00 PM</div></div>
+      <div class="trip-day at-sea"><div class="d-label">Day 2</div><div class="d-date">Sat, Aug 15</div><div class="d-place">At Sea</div></div>
+      <div class="trip-day"><div class="d-label">Day 3</div><div class="d-date">Sun, Aug 16</div><div class="d-place">Juneau, AK</div><div class="d-time">1:00 PM – 10:00 PM</div></div>
+      <div class="trip-day"><div class="d-label">Day 4</div><div class="d-date">Mon, Aug 17</div><div class="d-place">Skagway, AK</div><div class="d-time">8:00 AM – 8:00 PM</div></div>
+      <div class="trip-day"><div class="d-label">Day 5</div><div class="d-date">Tue, Aug 18</div><div class="d-place">Endicott Arm & Dawes Glacier</div><div class="d-time">5:00 AM – 10:00 AM</div></div>
+      <div class="trip-day at-sea"><div class="d-label">Day 6</div><div class="d-date">Wed, Aug 19</div><div class="d-place">At Sea</div></div>
+      <div class="trip-day"><div class="d-label">Day 7</div><div class="d-date">Thu, Aug 20</div><div class="d-place">Victoria, BC 🇨🇦</div><div class="d-time">10:00 AM – 6:00 PM</div></div>
+      <div class="trip-day"><div class="d-label">Day 8</div><div class="d-date">Fri, Aug 21</div><div class="d-place">Seattle, WA</div><div class="d-time">Returns morning</div></div>
+    </div>
+    <p class="trip-note">Times reflect Voyager of the Seas' published 7-night Seattle round-trip Alaska pattern (Seattle → Juneau → Skagway → Endicott Arm & Dawes Glacier → Victoria → Seattle). Confirm exact port times against your SetSail Pass — schedules can shift for weather or operations.</p>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-card">
+    <div class="compass-dial">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="compass-face" cx="50" cy="50" r="46"></circle>
+        <line class="compass-tick cardinal" x1="50" y1="5" x2="50" y2="14"></line>
+        <line class="compass-tick cardinal" x1="95" y1="50" x2="86" y2="50"></line>
+        <line class="compass-tick cardinal" x1="50" y1="95" x2="50" y2="86"></line>
+        <line class="compass-tick cardinal" x1="5" y1="50" x2="14" y2="50"></line>
+        <line class="compass-tick" x1="81.8" y1="18.2" x2="77.6" y2="22.4"></line>
+        <line class="compass-tick" x1="81.8" y1="81.8" x2="77.6" y2="77.6"></line>
+        <line class="compass-tick" x1="18.2" y1="81.8" x2="22.4" y2="77.6"></line>
+        <line class="compass-tick" x1="18.2" y1="18.2" x2="22.4" y2="22.4"></line>
+        <text class="compass-label" x="50" y="25">N</text>
+        <text class="compass-mark" x="23" y="80">⚓</text>
+        <text class="compass-mark" x="77" y="80">💰</text>
+        <g id="compassNeedle">
+          <polygon class="needle-front" points="50,10 58,50 42,50"></polygon>
+          <polygon class="needle-back" points="50,90 58,50 42,50"></polygon>
+          <circle class="compass-pivot" cx="50" cy="50" r="5"></circle>
+        </g>
+      </svg>
+      <div class="compass-pct" id="ringNum">0%</div>
+    </div>
+    <div class="progress-text">
+      <strong id="progressCount">0 of 0 stowed</strong>
+      <span>Check things off as you pack — your manifest updates live and saves automatically on this device.</span>
+    </div>
+    <button class="reset-btn" id="resetBtn" style="margin-left:auto;">Reset the Manifest ⚓</button>
+  </div>
+</div>
+
+<nav>
+  <div class="tabs" id="tabs">
+    <button class="tab-btn active" data-tab="pack">🏴‍☠️ Pack the Chest</button>
+    <button class="tab-btn" data-tab="documents">🗺️ Ship's Manifest</button>
+    <button class="tab-btn" data-tab="banned">☠️ Contraband</button>
+    <button class="tab-btn" data-tab="drinks">🍻 Grog & Bubbly</button>
+    <button class="tab-btn" data-tab="day1">⚓ Setting Sail</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- PACKING LIST -->
+  <section class="panel active" id="panel-pack">
+    <div class="panel-head">
+      <h2>Fill yer sea chest</h2>
+      <p>Tap a category to expand it. This covers what Royal Caribbean itself recommends for first-timers, plus the essentials seasoned cruisers say people forget.</p>
+    </div>
+    <div id="checklistRoot"></div>
+  </section>
+
+  <!-- DOCUMENTS -->
+  <section class="panel" id="panel-documents">
+    <div class="panel-head">
+      <h2>Ship's manifest & papers</h2>
+      <p>Handle this before you get to the terminal — it's the single biggest source of first-timer stress, and it's entirely avoidable.</p>
+    </div>
+
+    <div class="rule-card">
+      <h3>🪪 What to bring to the terminal</h3>
+      <p>Everyone must present an accepted form of ID based on their nationality — guests who don't bring the required documents may be denied boarding.</p>
+      <ul>
+        <li><strong>Closed-loop cruise</strong> (round-trip from a U.S. port): a valid <strong>passport is strongly recommended</strong>; some sailings allow a government-issued photo ID plus original/certified birth certificate instead, but a passport avoids complications if you need to fly home from a foreign port in an emergency.</li>
+        <li><strong>Any international/one-way itinerary:</strong> a passport valid well beyond your return date, plus any visas your specific itinerary requires.</li>
+        <li>Your <strong>SetSail Pass</strong> (mobile or printed boarding pass) generated after online check-in.</li>
+        <li>A credit/debit card linked for onboard spending (or you can link cash/gift cards at Guest Services).</li>
+      </ul>
+    </div>
+
+    <div class="rule-card">
+      <h3>📱 Complete check-in in the Royal Caribbean app first</h3>
+      <p>Online/app check-in typically opens well in advance of sailing and closes the day before departure. During check-in you'll enter guest details, upload ID, take a security photo, add an emergency contact, and select a <strong>terminal arrival time</strong>.</p>
+      <div class="callout">
+        <strong>Do this at least 3 days before sailing.</strong> If check-in isn't completed online, it must be finished at the pier at least two hours before the published sailing time — expect a longer wait.
+      </div>
+    </div>
+
+    <div class="rule-card">
+      <h3>⏰ Arrival time rules</h3>
+      <ul>
+        <li>Arrive at the terminal <strong>within the specific time slot</strong> you selected — not before, not after. Early arrivals are asked to wait; late arrivals may be pushed to a later group.</li>
+        <li>All guests must be checked in and onboard <strong>no later than 90 minutes before</strong> the ship's scheduled departure (or before port operations close, whichever is earlier) — port closing times vary by location, so don't cut it close.</li>
+        <li>A 24-hour push notification in the app will prompt you to complete a final health questionnaire before boarding.</li>
+      </ul>
+    </div>
+
+    <div class="rule-card">
+      <h3>🎒 Pack a "first hours" carry-on</h3>
+      <p>Your checked luggage won't reach your stateroom until later in the afternoon. In your carry-on, pack: your travel documents, medications, a swimsuit or change of clothes, phone charger, and anything you'll want before your cabin is ready.</p>
+    </div>
+
+    <div class="rule-card">
+      <h3>🇨🇦 Victoria, BC is a real border crossing — bring medication paperwork</h3>
+      <p>Your itinerary crosses into Canadian territory at Victoria on <strong>Day 7, Thursday, August 20</strong> (10:00 AM – 6:00 PM), so this isn't just cruise-line advice — it's a Canada Border Services Agency (CBSA) requirement.</p>
+      <ul>
+        <li>You must <strong>declare</strong> any prescription medication that contains a controlled substance when entering Canada — this applies even for a short port stop.</li>
+        <li>Some common U.S. prescriptions are treated as <strong>controlled substances in Canada</strong>, including certain sleep aids, anxiety medications, ADHD medications, and opioid painkillers — even though they're routine and legal at home.</li>
+        <li>Keep all medications in original, labeled containers, and carry a copy of the prescription or a doctor's letter for anything in those categories. Without it, border officials can legally seize the medication.</li>
+        <li>In practice, most Alaska round-trip cruisers barely notice Victoria — it's a short stop and CBSA screening for transiting passengers is typically light. But if either of you carries anything in the categories above, this is the one place that documentation earns its keep.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- BANNED -->
+  <section class="panel" id="panel-banned">
+    <div class="panel-head">
+      <h2>Contraband & what stays ashore</h2>
+      <p>Straight from Royal Caribbean's official prohibited items policy. Confiscated items are sometimes held and returned at the end of the cruise — but plenty are gone for good, so it's worth packing around these.</p>
+    </div>
+
+    <h3 style="font-family:'Baloo 2',cursive; font-size:15.5px; margin:20px 0 10px; color:var(--coral);">☠️ Scuttled — never allowed</h3>
+    <div class="banned-grid">
+      <div class="banned-card">
+        <h4>Illegal drugs & substances</h4>
+        <p>Includes marijuana — banned regardless of medical authorization or local legality at home.</p>
+      </div>
+      <div class="banned-card">
+        <h4>Weapons & dangerous items</h4>
+        <p>Firearms, ammunition, explosives, incendiaries, replicas, and gun parts. No onboard or pier storage is offered.</p>
+      </div>
+      <div class="banned-card">
+        <h4>Fire & flammable hazards</h4>
+        <p>Fireworks, sparklers, flammable materials, anything with an open flame.</p>
+      </div>
+      <div class="banned-card">
+        <h4>Clothing irons & garment steamers</h4>
+        <p>Banned as a fire risk. Pack wrinkle-release spray instead, or use the hot-shower trick.</p>
+      </div>
+      <div class="banned-card">
+        <h4>Mace, pepper spray & martial arts items</h4>
+        <p>Disabling chemicals and self-defense weapons are prohibited.</p>
+      </div>
+      <div class="banned-card">
+        <h4>Recreational vehicles</h4>
+        <p>Motorcycles, mopeds, ATVs, and similar conveyances.</p>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Baloo 2',cursive; font-size:15.5px; margin:26px 0 10px; color:#8A6A1E;">🗝️ Locked up — allowed with exceptions</h3>
+    <div class="banned-grid">
+      <div class="banned-card exception">
+        <h4>Knives, scissors & tools</h4>
+        <p><span class="tag tag-review">Exception</span> Grooming scissors/nail tools under 4" blades are fine; tools/screwdrivers over 7" are not. Diving knives are allowed only checked in/out by ship security for organized dive excursions.</p>
+      </div>
+      <div class="banned-card exception">
+        <h4>Sporting equipment</h4>
+        <p><span class="tag tag-review">Exception</span> Allowed only if stored in your stateroom and not used in public areas.</p>
+      </div>
+      <div class="banned-card exception">
+        <h4>Extension cords & power strips</h4>
+        <p><span class="tag tag-banned">Mostly banned</span> Any with surge protection or multi-plug outlets are prohibited. A basic, non-surge-protected power strip is one of the few exceptions.</p>
+      </div>
+      <div class="banned-card exception">
+        <h4>Baby monitors</h4>
+        <p><span class="tag tag-banned">Banned</span> Not permitted as electronic equipment; other baby necessities may be approved case-by-case if you email Special_needs@rccl.com before sailing.</p>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Baloo 2',cursive; font-size:15.5px; margin:26px 0 10px; color:var(--teal);">💰 Buried treasure — surprisingly allowed</h3>
+    <div class="banned-grid">
+      <div class="banned-card exception">
+        <h4>Small personal fans</h4>
+        <p>Allowed for personal use in your stateroom.</p>
+      </div>
+      <div class="banned-card exception">
+        <h4>Curling & flat irons</h4>
+        <p>Personal hair styling tools are fine — just not steam irons/garment steamers. A hair dryer is already provided in your stateroom.</p>
+      </div>
+      <div class="banned-card exception">
+        <h4>USB & device chargers</h4>
+        <p>Allowed if marked with recognized U.S. or European conformity certification.</p>
+      </div>
+      <div class="banned-card exception">
+        <h4>Smart glasses</h4>
+        <p>Allowed onboard, but can't be worn in the casino, spa, restrooms, locker rooms, medical facilities, security screening areas, youth zones, or crew areas.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      🧭 <strong>Your Alaska + Victoria, BC itinerary:</strong> the Mexico/Caribbean-specific restrictions (vapes, camouflage clothing) don't apply to this route. The one that does: Victoria is a genuine Canadian border crossing — see the Canada medication note on the Ship's Manifest tab.
+    </div>
+  </section>
+
+  <!-- DRINKS -->
+  <section class="panel" id="panel-drinks">
+    <div class="panel-head">
+      <h2>Grog, bubbly & bites</h2>
+      <p>The most-asked question from first-timers, verified against Royal Caribbean's official beverage policy.</p>
+    </div>
+
+    <div class="rule-card">
+      <h3>🍾 Wine & champagne <span class="tag tag-allowed">Allowed</span></h3>
+      <p>On embarkation day, each guest of drinking age may bring <strong>one (1) sealed 750ml bottle of wine or champagne</strong>. Boxed wine and other container types are prohibited.</p>
+      <ul>
+        <li><strong>Pack it in your carry-on</strong> — luggage containing wine won't be delivered to your cabin; you'd have to retrieve it from security after the ship sails.</li>
+        <li>Bring more than one bottle, or buy alcohol onboard or in port? It gets safely stored and returned to you on the last day.</li>
+        <li>On a back-to-back (consecutive) sailing, you're allowed one bottle per individual sailing — extra bottles are delivered one at a time on the first day of each new voyage.</li>
+      </ul>
+    </div>
+
+    <div class="rule-card">
+      <h3>🍺 Beer & liquor <span class="tag tag-banned">Not allowed</span></h3>
+      <p>No other type of alcohol — beer, seltzer, hard liquor — may be brought onboard at embarkation. Anything seized on embarkation day is <strong>not returned</strong>.</p>
+    </div>
+
+    <div class="rule-card">
+      <h3>🥤 Non-alcoholic beverages <span class="tag tag-allowed">Allowed, limited</span></h3>
+      <p>You can carry on up to <strong>12 standard cans, bottles, or cartons (17 oz. or less)</strong> of soda, water, or similar drinks — per stateroom, not per person. Milk and distilled water for infant, medical, or dietary use are permitted beyond that limit.</p>
+    </div>
+
+    <div class="rule-card">
+      <h3>🍿 Snacks <span class="tag tag-allowed">Allowed, in reason</span></h3>
+      <p>Pre-packaged, sealed snacks are fine in sensible quantities. There's no hard cap, but Royal Caribbean notes the ship is already stocked with plenty of complimentary food.</p>
+    </div>
+  </section>
+
+  <!-- EMBARKATION DAY -->
+  <section class="panel" id="panel-day1">
+    <div class="panel-head">
+      <h2>Setting sail — how the day unfolds</h2>
+      <p>Your sailing departs <strong>Friday, August 14</strong> from the Seattle cruise terminal at 4:00 PM. Knowing the shape of the day removes most of the first-timer anxiety.</p>
+    </div>
+    <div class="rule-card">
+      <div class="timeline">
+        <div class="t-step">
+          <h4>⚓ Weeks before: complete online check-in</h4>
+          <p>Do this in the Royal Caribbean app as early as it opens for your sailing. Upload ID, take your security photo, and pick your terminal arrival time — earlier slots fill up first.</p>
+        </div>
+        <div class="t-step">
+          <h4>⚓ 3 days before: confirm everything's locked in</h4>
+          <p>Finish check-in by this point to avoid finishing it at the pier, which takes longer.</p>
+        </div>
+        <div class="t-step">
+          <h4>⚓ 24 hours before: health questionnaire unlocks</h4>
+          <p>A push notification prompts you to complete it in the app before boarding.</p>
+        </div>
+        <div class="t-step">
+          <h4>⚓ Arrival: show up in your selected time window</h4>
+          <p>Porters take your tagged checked luggage curbside — it'll reach your stateroom later in the day. Keep documents, medication, valuables, and a change of clothes with you.</p>
+        </div>
+        <div class="t-step">
+          <h4>⚓ Security & check-in at the terminal</h4>
+          <p>Bag scan, ID check, and your SetSail Pass gets scanned. Large suitcases that don't fit the standard X-ray get manually checked, which can add time.</p>
+        </div>
+        <div class="t-step">
+          <h4>⚓ Onboard by 90 minutes before departure — no exceptions</h4>
+          <p>All guests must be checked in and aboard at least 90 minutes prior to sailing time, or before port operations close (whichever is earlier). Late arrivals risk missing the ship entirely.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Packing and prohibited-item details reflect Royal Caribbean's official guides and FAQ pages as of this guide's creation. Policies can change — always double-check <a href="https://www.royalcaribbean.com/faq" target="_blank" rel="noopener">royalcaribbean.com/faq</a> close to your sail date.
+  <span class="signoff">⚓ Fair winds and following seas — see you at the helm!</span>
+</footer>
+
+<script>
+  // ---------- Data ----------
+  const checklistData = [
+    {
+      id: "docs",
+      icon: "🗺️",
+      title: "Documents & doubloons",
+      items: [
+        { t: "Passport (or accepted ID for closed-loop sailings)" },
+        { t: "Printed or saved SetSail Pass / boarding pass" },
+        { t: "Any required visas for your itinerary" },
+        { t: "Credit or debit card for onboard account" },
+        { t: "Travel insurance confirmation, if purchased" },
+        { t: "Copy of prescriptions for any medications" }
+      ]
+    },
+    {
+      id: "clothing",
+      icon: "👕",
+      title: "Clothing for the crew",
+      items: [
+        { t: "Layers — Alaska daytime temps swing widely; a base layer, fleece/sweater, and a warm jacket cover most days" },
+        { t: "Waterproof, windproof outer layer (rain jacket)", n:"Southeast Alaska gets frequent rain regardless of season" },
+        { t: "\"Wear your best\" evening outfit(s) — jeans-and-blouse casual up to cocktail dress, your call", n:"No formal night is required, but pack one nicer outfit if you're not sure" },
+        { t: "Smart-casual outfit for specialty restaurants like Chops Grille or 150 Central Park" },
+        { t: "Swimsuit for the pool/hot tub, if you plan to use them", n:"Optional on a colder-weather itinerary, but ships still run heated pools" },
+        { t: "Athletic wear for the gym, sports court, or rock wall" },
+        { t: "Comfortable waterproof walking shoes / hiking boots for shore excursions (glaciers, trails, Victoria's Butchart Gardens)" },
+        { t: "Warm hat, gloves, and a scarf for glacier viewing and early mornings on deck" },
+        { t: "Long pants + tall socks for the ice rink", n:"Voyager of the Seas has one — worth it even if you're not a skater" }
+      ]
+    },
+    {
+      id: "toiletries",
+      icon: "🧴",
+      title: "Toiletries & health",
+      items: [
+        { t: "Sunscreen (Alaska sun reflects hard off water/snow even in cool weather)" },
+        { t: "Basic over-the-counter meds: motion sickness, pain reliever, allergy, upset stomach", n:"Onboard shops carry a very limited selection at high prices" },
+        { t: "Prescription medications in original, labeled containers" },
+        { t: "Wrinkle-release spray (irons and steamers are banned onboard)" },
+        { t: "Conditioner and body lotion", n:"Standard staterooms provide shampoo and bar soap only — conditioner/lotion are suite-tier perks" },
+        { t: "Any toiletries you're particular about (your own shampoo, skincare, etc.)", n:"No airline-style size limit — pack full-size bottles if you want" }
+      ]
+    },
+    {
+      id: "gear",
+      icon: "🎒",
+      title: "Gear & sea-worthy extras",
+      items: [
+        { t: "Phone charger + a basic (non-surge-protected) power strip", n:"Cabins have very few outlets; surge-protected strips are prohibited" },
+        { t: "Lanyard for your SeaPass card / room key" },
+        { t: "Reusable water bottle — tap water onboard is safe to drink" },
+        { t: "Small tote or day bag for port days" },
+        { t: "Empty, packable duffel for souvenirs on the way home" },
+        { t: "Portable battery pack for excursion days" }
+      ]
+    },
+    {
+      id: "day1kit",
+      icon: "🧳",
+      title: "First-hours carry-on kit",
+      items: [
+        { t: "All travel documents and boarding pass" },
+        { t: "A full change of clothes + swimsuit", n:"Checked luggage isn't delivered to your cabin until later in the afternoon" },
+        { t: "Medications you might need before your bags arrive" },
+        { t: "One sealed 750ml bottle of wine or champagne, if bringing one", n:"Must go in carry-on, not checked luggage — see the Drinks tab" }
+      ]
+    }
+  ];
+
+  const root = document.getElementById("checklistRoot");
+  let totalItems = 0;
+
+  checklistData.forEach((group, gi) => {
+    totalItems += group.items.length;
+    const groupEl = document.createElement("div");
+    groupEl.className = "group" + (gi === 0 ? " open" : "");
+    groupEl.innerHTML = `
+      <div class="group-head" role="button" tabindex="0" aria-expanded="${gi===0}">
+        <div class="group-head-left">
+          <span class="group-icon">${group.icon}</span>
+          <span class="group-title">${group.title}</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span class="group-meta" id="meta-${group.id}">0/${group.items.length}</span>
+          <svg class="group-chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+      <div class="group-body">
+        <div class="group-items" id="items-${group.id}"></div>
+      </div>
+    `;
+    root.appendChild(groupEl);
+
+    const itemsWrap = groupEl.querySelector(`#items-${group.id}`);
+    group.items.forEach((item, ii) => {
+      const id = `${group.id}-${ii}`;
+      const row = document.createElement("div");
+      row.className = "item";
+      row.innerHTML = `
+        <input type="checkbox" id="${id}">
+        <label for="${id}">${item.t}${item.n ? `<span class="item-note">${item.n}</span>` : ""}</label>
+      `;
+      itemsWrap.appendChild(row);
+    });
+
+    groupEl.querySelector(".group-head").addEventListener("click", () => {
+      groupEl.classList.toggle("open");
+      groupEl.querySelector(".group-head").setAttribute("aria-expanded", groupEl.classList.contains("open"));
+    });
+    groupEl.querySelector(".group-head").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); groupEl.querySelector(".group-head").click(); }
+    });
+  });
+
+  function updateProgress() {
+    const allBoxes = root.querySelectorAll('input[type=checkbox]');
+    let checked = 0;
+    allBoxes.forEach(b => { if (b.checked) checked++; });
+
+    checklistData.forEach(group => {
+      const boxes = document.querySelectorAll(`#items-${group.id} input[type=checkbox]`);
+      let c = 0;
+      boxes.forEach(b => { if (b.checked) c++; });
+      document.getElementById(`meta-${group.id}`).textContent = `${c}/${group.items.length}`;
+    });
+
+    const pct = totalItems ? Math.round((checked / totalItems) * 100) : 0;
+    document.getElementById("progressCount").textContent = `${checked} of ${totalItems} stowed`;
+    document.getElementById("ringNum").textContent = `${pct}%`;
+    // Needle sweeps from the anchor (0%, bottom-left) through North (50%, on course)
+    // to the treasure (100%, bottom-right).
+    const angle = -135 + (pct / 100) * 270;
+    document.getElementById("compassNeedle").style.transform = `rotate(${angle}deg)`;
+  }
+
+  // ---------- Local persistence (per browser/device, no account needed) ----------
+  const STORAGE_KEY = "cruisePrep.packedItems.v1";
+
+  function saveState() {
+    try {
+      const checkedIds = [];
+      root.querySelectorAll('input[type=checkbox]:checked').forEach(b => checkedIds.push(b.id));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(checkedIds));
+    } catch (e) {
+      // localStorage unavailable (private browsing, storage full, etc.) — fail silently
+    }
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const savedIds = JSON.parse(raw);
+      if (!Array.isArray(savedIds)) return;
+      savedIds.forEach(id => {
+        const box = document.getElementById(id);
+        if (box) {
+          box.checked = true;
+          box.closest(".item").classList.add("checked");
+        }
+      });
+    } catch (e) {
+      // corrupt or missing storage — start fresh
+    }
+  }
+
+  root.addEventListener("change", (e) => {
+    if (e.target.matches('input[type=checkbox]')) {
+      const row = e.target.closest(".item");
+      row.classList.toggle("checked", e.target.checked);
+      updateProgress();
+      saveState();
+    }
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    root.querySelectorAll('input[type=checkbox]').forEach(b => {
+      b.checked = false;
+      b.closest(".item").classList.remove("checked");
+    });
+    updateProgress();
+    saveState();
+  });
+
+  loadState();
+  updateProgress();
+
+  // ---------- Tabs ----------
+  const tabBtns = document.querySelectorAll(".tab-btn");
+  tabBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      tabBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+      document.getElementById(`panel-${btn.dataset.tab}`).classList.add("active");
+      window.scrollTo({top: 0, behavior: "smooth"});
+    });
+  });
+</script>
+
+</body>
+</html>
